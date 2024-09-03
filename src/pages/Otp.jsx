@@ -11,9 +11,7 @@ import BASE_URL from "../components/urls";
 const schema = yup.object().shape({
   otp: yup
     .string()
-    .matches(/^\d+$/, "OTP must be numeric")
-    .min(6, "OTP must be at least 6 characters")
-    .max(30, "OTP cannot exceed 30 characters")
+    .matches(/^\d{6}$/, "OTP must be exactly 6 digits")
     .required("OTP is required"),
 });
 
@@ -29,8 +27,8 @@ const Otp = () => {
   const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e) => {
-    const value = e.target.value;
-    e.target.value = value.replace(/\D/g, "");
+    const value = e.target.value.replace(/\D/g, ""); // Remove non-digits
+    e.target.value = value.slice(0, 6); // Limit to 6 digits
   };
 
   const submitForm = (data) => {
@@ -40,7 +38,7 @@ const Otp = () => {
       .then((response) => {
         console.log(response.data);
         reset(); // Clear the input field
-        navigate("/otp");
+        navigate("/otp"); // Replace with your desired route
       })
       .catch((error) => {
         console.error("There was an error!", error);
